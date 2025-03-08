@@ -1,9 +1,11 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>
-    Layout: default
-    <slot />
+  <div class="relative h-screen">
+    <Header />
+    <main class="mx-auto">
+      <slot />
+    </main>
   </div>
 </template>
 

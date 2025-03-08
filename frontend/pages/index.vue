@@ -1,8 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
 
 <template>
   <div>
-    Page: index
+    <HeroSection />
+    <AboutSection id="about" />
+    <ScheduleSection id="schedule-a-visit" />
   </div>
 </template>
 
