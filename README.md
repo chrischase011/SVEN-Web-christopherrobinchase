@@ -25,6 +25,7 @@ __Note:__ The `FRONTEND_SECRET` key provides an additional layer of security in 
 npm run serve
 ```
 
+Thank you!!!
 
 
 
