@@ -2,6 +2,7 @@
   import { Field, Form, ErrorMessage } from 'vee-validate'
   import Swal from 'sweetalert2'
   import moment from 'moment'
+  import DOMPurify from 'dompurify'
 
 
   const config = useRuntimeConfig()
@@ -37,6 +38,8 @@
         selectedDays.value.push(day);
       }
     }
+
+    console.log(selectedDays.value);
   };
 
   const toggleTime = (time: string) => {
@@ -45,6 +48,8 @@
     } else {
       selectedTime.value.push(time);
     }
+
+    console.log(selectedTime.value);
   };
 
   watch(frequency, () => {
@@ -97,7 +102,13 @@
           'X-Frontend-Secret': secretKey,
           'X-XSRF-TOKEN': csrfToken
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          start_date: start_date.value,
+          frequency: frequency.value,
+          days: selectedDays.value,
+          times: selectedTime.value,
+          notes: DOMPurify.sanitize(notes.value),
+        }),
         credentials: 'include'
       });
 
@@ -110,7 +121,9 @@
           icon: 'success',
           title: 'Service Scheduled!',
           text: 'Your service has been scheduled successfully. We will notify you when the sitter is on the way.',
-          timer: 5000
+          timer: 5000,
+          allowEscapeKey: false,
+          allowOutsideClick: false,
         }).then((res) => {
           clearFields();
         });
