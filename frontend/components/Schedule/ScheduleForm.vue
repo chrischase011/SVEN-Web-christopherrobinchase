@@ -26,10 +26,8 @@
 
   const toggleDay = (day: string) => {
     if (frequency.value === "One Time") {
-      // One-time mode: Only allow one selection
       selectedDays.value = [day];
     } else {
-      // Recurring mode: Allow multiple selections
       if (selectedDays.value.includes(day)) {
         selectedDays.value = selectedDays.value.filter(d => d !== day);
       } else {
@@ -102,7 +100,6 @@
       throw new Error(error.value.message);
     }
 
-    // Wait until response is successful before showing the alert
     if (data.value?.success) {
       await Swal.fire({
         icon: 'success',

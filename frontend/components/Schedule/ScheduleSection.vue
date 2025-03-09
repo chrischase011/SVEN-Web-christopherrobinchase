@@ -15,10 +15,10 @@
           backgroundPosition: 'center'
         }"
       >
-        <div class="flex justify-center items-center gap-4 text-lg lg:text-xl font-light uppercase tracking-widest">
+        <NuxtLink to="#" class="flex justify-center items-center gap-4 text-lg lg:text-xl font-light uppercase tracking-widest">
           <NuxtImg src="/images/logo.png" class="p-1 bg-secondary rounded-full w-12 h-12 lg:w-16 lg:h-16" />
           Pawtastic
-        </div>
+        </NuxtLink>
 
         <div>
           <span class="text-3xl lg:text-4xl font-bold">All services include:</span>
