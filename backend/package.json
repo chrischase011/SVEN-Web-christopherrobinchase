@@ -6,7 +6,7 @@
         "build": "vite build",
         "dev": "vite",
         "serve": "php artisan serve",
-        "install:backend": "npm install --verbose && node -e \"const fs = require('fs'); if (!fs.existsSync('.env')) fs.copyFileSync('.env.example', '.env');\" && composer install && php artisan key:generate"
+        "install:backend": "npm install --verbose && node -e \"const fs = require('fs'); if (!fs.existsSync('.env')) fs.copyFileSync('.env.example', '.env');\" && composer install && php artisan key:generate && php artisan migrate:fresh --seed && php artisan generate:secret-key"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",

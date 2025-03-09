@@ -8,6 +8,17 @@ useHead({
     }
   ]
 })
+
+
+const tokenStore = useTokenStore()
+const csrfStore = useCSRFStore()
+
+useAsyncData('generateToken', async () => {
+  await tokenStore.generateToken();
+  await csrfStore.generateCSRF();
+});
+
+
 </script>
 
 <template>

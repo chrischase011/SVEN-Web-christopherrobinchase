@@ -2,7 +2,19 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', 'nuxt-aos'],
+  runtimeConfig: {
+    public: {
+      secretKey: process.env.SECRET_KEY,
+      apiURL: process.env.API_URL || 'http://localhost:8000'
+    }
+  },
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@nuxt/image',
+    'nuxt-aos',
+    '@pinia/nuxt',
+    '@vee-validate/nuxt',
+  ],
   components: [
     { path: '~/components', pathPrefix: false }
   ],
