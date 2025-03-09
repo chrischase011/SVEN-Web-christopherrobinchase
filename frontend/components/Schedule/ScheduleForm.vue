@@ -18,10 +18,13 @@
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const times = ["Morning", "Afternoon", "Evening"];
 
+  const start_date = ref('');
   const frequency = ref('Recurring')
   const selectedDays = ref<string[]>([]);
   const selectedTime = ref<string[]>([]);
   const notes = ref('');
+
+  const isSubmitting = ref(false);
 
 
   const toggleDay = (day: string) => {
@@ -75,6 +78,7 @@
   }
 
   const clearFields = () => {
+    start_date.value = '';
     selectedDays.value = [];
     selectedTime.value = [];
     notes.value = '';
@@ -84,42 +88,47 @@
 
   const onSubmit = async (values: any) => {
     try {
-    const { data, error } = await useFetch(`${apiURL}/api/book-schedule`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token.value}`,
-        'X-Frontend-Secret': secretKey,
-        'X-XSRF-TOKEN': csrfToken
-      },
-      body: JSON.stringify(values),
-      credentials: 'include'
-    });
-
-    if (error.value) {
-      throw new Error(error.value.message);
-    }
-
-    if (data.value?.success) {
-      await Swal.fire({
-        icon: 'success',
-        title: 'Service Scheduled!',
-        text: 'Your service has been scheduled successfully. We will notify you when the sitter is on the way.',
-        timer: 5000
+      isSubmitting.value = true;
+      const { data, error } = await useFetch(`${apiURL}/api/book-schedule`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token.value}`,
+          'X-Frontend-Secret': secretKey,
+          'X-XSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(values),
+        credentials: 'include'
       });
 
-      clearFields();
-    } else {
-      throw new Error("Something went wrong!");
+      if (error.value) {
+        throw new Error(error.value.message);
+      }
+
+      if (data.value?.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Service Scheduled!',
+          text: 'Your service has been scheduled successfully. We will notify you when the sitter is on the way.',
+          timer: 5000
+        }).then((res) => {
+          clearFields();
+        });
+
+        isSubmitting.value = false;
+      } else {
+        throw new Error("Something went wrong!");
+      }
+    } catch (err) {
+      console.error("Booking failed:", err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops!',
+        text: 'Failed to schedule the service. Please try again later.',
+      });
+
+      isSubmitting.value = false;
     }
-  } catch (err) {
-    console.error("Booking failed:", err);
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops!',
-      text: 'Failed to schedule the service. Please try again later.',
-    });
-  }
   };
 </script>
 
@@ -164,6 +173,7 @@
           <Field
             type="date"
             name="start_date"
+            v-model="start_date"
             :min="minDate"
             class="rounded-lg bg-white mt-3 p-3 h-[50px] text-tertiary appearance-none w-full"
             :rules="validateStartDate"
@@ -235,8 +245,8 @@
 
       <!-- Submit Button -->
       <div class="flex items-center justify-center mt-6">
-        <button type="submit" class="bg-primary font-light text-white rounded-full py-3 px-10 w-full lg:w-auto">
-          Schedule Service
+        <button type="submit" :disabled="isSubmitting" class="bg-primary font-light text-white rounded-full py-3 px-10 w-full lg:w-auto">
+          {{ isSubmitting ? 'Scheduling...' : 'Schedule Service' }}
         </button>
       </div>
     </Form>
